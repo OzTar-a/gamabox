@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工具箱</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+            line-height: 1.6;
+            background-color: #f0f2f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container { width: 90%; max-width: 1000px; margin: 0 auto; }
+
+        header {
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 0; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        header .container {
+            display: flex;
+            flex-direction: column; 
+            align-items: center;
+        }
+
+        .logo-area {
+            padding: 1rem 0;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-tabs {
+            display: flex;
+            width: 100%;
+            max-width: 600px;
+            list-style: none;
+            margin-bottom: -2px; 
+        }
+
+        .nav-tabs li {
+            flex: 1;
+            text-align: center;
+        }
+
+        .nav-tabs a {
+            display: block;
+            padding: 15px 0;
+            color: #bdc3c7;
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 4px solid transparent;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-tabs a:hover {
+            color: #ecf0f1;
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        .nav-tabs a.active {
+            color: #fff;
+            border-bottom: 4px solid #e74c3c;
+        }
+
+        main { flex: 1; padding: 40px 0; }
+
+        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            overflow: hidden;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .card-header {
+            background: #34495e;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        .card-header h2 { margin: 0; font-size: 1.5rem; }
+        .card-header p { opacity: 0.8; font-size: 0.9rem; margin-top: 5px; }
+
+        .card-body { padding: 30px; }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50; font-size: 0.95rem; }
+        .form-group input {
+            width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0;
+            border-radius: 8px; font-size: 1rem; outline: none; transition: border-color 0.3s;
+        }
+        .form-group input:focus { border-color: #3498db; }
+
+        .row-group { display: flex; gap: 15px; }
+        .row-group .form-group { flex: 1; margin-bottom: 0; }
+
+        .result-box {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        .result-item {
+            margin: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 10px;
+        }
+        .result-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        
+        .result-label { font-size: 1.1rem; opacity: 0.9; }
+        .result-value { font-size: 1.5rem; font-weight: bold; color: #f1c40f; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        
+        .time-result { font-size: 1.8rem; color: #f1c40f; font-weight: bold; display: block; margin-top: 10px; }
+        
+        .sub-result-label { font-size: 0.95rem; opacity: 0.8; display: block; margin-bottom: 5px;}
+        .sub-result-value { font-size: 1.2rem; color: #ecf0f1; font-weight: 600; }
+
+        .note { font-size: 0.85rem; color: #7f8c8d; text-align: center; margin-top: 15px; }
+
+        footer { background: #2c3e50; color: #bdc3c7; text-align: center; padding: 20px 0; font-size: 0.9rem; margin-top: auto; }
+
+        @media (max-width: 600px) {
+            .row-group { flex-direction: column; gap: 20px; }
+            .card-body { padding: 20px; }
+            .result-item { flex-direction: column; gap: 5px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <div class="logo-area"></div>
+            <ul class="nav-tabs">
+                <li><a class="active" onclick="switchTab('tab-star')">原初之星</a></li>
+                <li><a onclick="switchTab('tab-exp')">經驗計算</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+            <div id="tab-star" class="tab-content active">
+                <div class="tool-card">
+                    <div class="card-header">
+                        <h2>🏆 賽季等級計算機</h2>
+                        <p>輸入角色數據，預測原初之星評分</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>角色等級 (Lv)</label>
+                            <input type="number" id="charLevel" placeholder="100-120">
+                        </div>
+                        <div class="form-group row-group">
+                            <div class="form-group">
+                                <label>當前經驗</label>
+                                <input type="number" id="currentExp" placeholder="0">
+                            </div>
+                            <div class="form-group">
+                                <label>經驗上限</label>
+                                <input type="number" id="maxExp" placeholder="0">
+                            </div>
+                        </div>
+                        <div class="form-group row-group">
+                            <div class="form-group">
+                                <label>技能均等</label>
+                                <input type="number" id="avgSkill">
+                            </div>
+                            <div class="form-group">
+                                <label>裝備均等</label>
+                                <input type="number" id="avgEquip">
+                            </div>
+                        </div>
+                        <div class="form-group row-group">
+                            <div class="form-group">
+                                <label>幻獸均等</label>
+                                <input type="number" id="avgPal">
+                            </div>
+                            <div class="form-group">
+                                <label>遺物均等</label>
+                                <input type="number" id="avgRelic">
+                            </div>
+                        </div>
+
+                        <div class="result-box">
+                            <div class="result-item">
+                                <span class="result-label">總分</span>
+                                <span id="star-totalScore" class="result-value">0</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">原初之星</span>
+                                <span id="star-final" class="result-value">10.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-exp" class="tab-content">
+                <div class="tool-card">
+                    <div class="card-header">
+                        <h2>⏳ 升級時間計算</h2>
+                        <p>計算掛機所需時間，包含加速道具折抵</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group row-group">
+                            <div class="form-group">
+                                <label>現在等級</label>
+                                <input type="number" id="exp-currentLv" placeholder="例如 100">
+                            </div>
+                            <div class="form-group">
+                                <label>目標等級</label>
+                                <input type="number" id="exp-targetLv" placeholder="例如 120">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>現在已累積經驗</label>
+                            <input type="number" id="exp-currentExp" placeholder="0">
+                        </div>
+
+                        <div class="form-group">
+                            <label>每小時經驗 (Exp/Hr)</label>
+                            <input type="number" id="exp-perHour" placeholder="例如 350000">
+                        </div>
+
+                        <div class="form-group row-group">
+                            <div class="form-group">
+                                <label>免費加速 (次)</label>
+                                <input type="number" id="exp-freeSpeedup" placeholder="次數">
+                            </div>
+                            <div class="form-group">
+                                <label>加速石頭 (顆)</label>
+                                <input type="number" id="exp-stoneSpeedup" placeholder="次數">
+                            </div>
+                        </div>
+                        <p class="note" style="margin-bottom: 20px; text-align: left;">* 註：每次加速均以 2 小時經驗計算</p>
+
+                        <div class="result-box">
+                            <div style="margin-bottom: 20px;">
+                                <span class="result-label">預計所需時間 (含加速)</span>
+                                <span id="exp-timeResult" class="time-result">0天 0小時 0分</span>
+                            </div>
+                            <div style="border-top: 1px solid rgba(255,255,255,0.3); padding-top: 15px;">
+                                <span class="sub-result-label">若完全不使用加速道具</span>
+                                <span id="exp-timeResult-original" class="sub-result-value">0天 0小時 0分</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 GameGuide. 數據與圖片僅供參考.</p>
+    </footer>
+
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-tabs a').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        const starInputs = ['charLevel', 'currentExp', 'maxExp', 'avgSkill', 'avgEquip', 'avgPal', 'avgRelic'];
+        starInputs.forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.addEventListener('input', calculateStar);
+        });
+
+        function calculateStar() {
+            const getVal = (id) => {
+                const el = document.getElementById(id);
+                return el.value === "" ? null : Number(el.value);
+            };
+
+            const charLevel = getVal('charLevel');
+            const currentExp = Number(document.getElementById('currentExp').value) || 0;
+            const maxExp = Number(document.getElementById('maxExp').value) || 0;
+            const avgSkill = getVal('avgSkill');
+            const avgEquip = getVal('avgEquip');
+            const avgPal = getVal('avgPal');
+            const avgRelic = getVal('avgRelic');
+
+            let scoreLevel = (charLevel === null) ? 0 : (charLevel - 100) * 100;
+            let scoreExp = (maxExp !== 0) ? Math.round((currentExp / maxExp) * 100) : 0;
+            let scoreSkill = (avgSkill === null) ? 0 : (avgSkill - 100) * 104;
+            let scoreEquip = (avgEquip === null) ? 0 : (avgEquip - 100) * 190;
+            let scorePal = (avgPal === null) ? 0 : (avgPal - 100) * 56;
+            let scoreRelic = (avgRelic === null) ? 0 : (avgRelic - 10) * 1140;
+
+            const total = scoreLevel + scoreExp + scoreSkill + scoreEquip + scorePal + scoreRelic;
+            const stars = 10 + (total / 100);
+
+            document.getElementById('star-totalScore').textContent = new Intl.NumberFormat().format(total);
+            document.getElementById('star-final').textContent = stars.toFixed(2);
+        }
+        
+        // 經驗表數據 (Level 100 - 124+)
+        const expTable = {
+            100: 886086,
+            101: 888547,
+            102: 926501,
+            103: 964086,
+            104: 1012164,
+            105: 1054111,
+            106: 1096529,
+            107: 1135645,
+            108: 1174997,
+            109: 1214584,
+            110: 1258533,
+            111: 1303677,
+            112: 1348574,
+            113: 1393941,
+            114: 1439780,
+            115: 1486091,
+            116: 1532872,
+            117: 1580125,
+            118: 1627849,
+            119: 1676044,
+            120: 1730017,
+            121: 1783360,
+            MAX_VAL: 1833196 
+        };
+
+        function getExpForLevel(lvl) {
+            if (lvl < 100) return 0; 
+            if (lvl >= 122) return expTable.MAX_VAL;
+            return expTable[lvl] || expTable.MAX_VAL;
+        }
+
+        const expInputs = ['exp-currentLv', 'exp-targetLv', 'exp-currentExp', 'exp-perHour', 'exp-freeSpeedup', 'exp-stoneSpeedup'];
+        expInputs.forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.addEventListener('input', calculateTime);
+        });
+        
+        function formatTime(totalHours) {
+            if (totalHours <= 0) return "0分";
+            
+            const days = Math.floor(totalHours / 24);
+            const remainingHours = Math.floor(totalHours % 24);
+            const minutes = Math.round((totalHours * 60) % 60);
+
+            let timeString = "";
+            if (days > 0) timeString += `${days}天 `;
+            if (remainingHours > 0 || days > 0) timeString += `${remainingHours}小時 `;
+            timeString += `${minutes}分`;
+            return timeString;
+        }
+
+        function calculateTime() {
+            const currentLv = Number(document.getElementById('exp-currentLv').value);
+            const targetLv = Number(document.getElementById('exp-targetLv').value);
+            const currentExp = Number(document.getElementById('exp-currentExp').value) || 0;
+            const expPerHour = Number(document.getElementById('exp-perHour').value) || 0;
+            const freeSpeedup = Number(document.getElementById('exp-freeSpeedup').value) || 0;
+            const stoneSpeedup = Number(document.getElementById('exp-stoneSpeedup').value) || 0;
+
+            // 基本防呆
+            if (!currentLv || !targetLv || currentLv >= targetLv) {
+                document.getElementById('exp-timeResult').textContent = "請輸入正確等級範圍";
+                document.getElementById('exp-timeResult-original').textContent = "--";
+                return;
+            }
+
+            let totalNeeded = 0;
+            for (let lv = currentLv; lv < targetLv; lv++) {
+                totalNeeded += getExpForLevel(lv);
+            }
+
+            let baseRemainingNeeded = totalNeeded - currentExp;
+
+            if (baseRemainingNeeded <= 0) {
+                document.getElementById('exp-timeResult').textContent = "已達成目標！";
+                document.getElementById('exp-timeResult-original').textContent = "已達成目標！";
+                return;
+            }
+
+            if (expPerHour <= 0) {
+                document.getElementById('exp-timeResult').textContent = "請輸入每小時經驗";
+                document.getElementById('exp-timeResult-original').textContent = "請輸入每小時經驗";
+                return;
+            }
+
+            const baseHoursNeeded = baseRemainingNeeded / expPerHour;
+            document.getElementById('exp-timeResult-original').textContent = formatTime(baseHoursNeeded);
+
+
+            const speedupHours = (freeSpeedup + stoneSpeedup) * 2;
+            const speedupExp = speedupHours * expPerHour;
+            
+            let actualRemainingNeeded = baseRemainingNeeded - speedupExp;
+
+            if (actualRemainingNeeded <= 0) {
+                document.getElementById('exp-timeResult').textContent = "加速後可立即達成！";
+                return;
+            }
+
+            const actualHoursNeeded = actualRemainingNeeded / expPerHour;
+            document.getElementById('exp-timeResult').textContent = formatTime(actualHoursNeeded);
+        }
+    </script>
+</body>
+</html>

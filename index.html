@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>工具箱</title>
+    <title>原初之星 & 經驗計算</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -21,13 +21,13 @@
         header {
             background-color: #2c3e50;
             color: #fff;
-            padding: 0; 
+            padding: 0;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         header .container {
             display: flex;
-            flex-direction: column; 
+            flex-direction: column;
             align-items: center;
         }
 
@@ -42,13 +42,10 @@
             width: 100%;
             max-width: 600px;
             list-style: none;
-            margin-bottom: -2px; 
+            margin-bottom: -2px;
         }
 
-        .nav-tabs li {
-            flex: 1;
-            text-align: center;
-        }
+        .nav-tabs li { flex: 1; text-align: center; }
 
         .nav-tabs a {
             display: block;
@@ -82,7 +79,7 @@
             border-radius: 12px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.12);
             overflow: hidden;
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
         }
 
@@ -99,14 +96,154 @@
 
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50; font-size: 0.95rem; }
-        .form-group input {
-            width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0;
-            border-radius: 8px; font-size: 1rem; outline: none; transition: border-color 0.3s;
+        
+        .form-group input,
+        .simple-view input {
+            width: 100%; 
+            padding: 12px 15px; 
+            border: 2px solid #e0e0e0;
+            border-radius: 8px; 
+            font-size: 1rem; 
+            outline: none; 
+            transition: border-color 0.3s;
+            background: #fff;
         }
-        .form-group input:focus { border-color: #3498db; }
+        
+        .form-group input:focus,
+        .simple-view input:focus { 
+            border-color: #3498db; 
+        }
 
         .row-group { display: flex; gap: 15px; }
         .row-group .form-group { flex: 1; margin-bottom: 0; }
+
+        .category-section {
+            background: #fafafa;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .category-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+        }
+        
+        .category-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 18px;
+            background: #3498db;
+            margin-right: 10px;
+            border-radius: 2px;
+        }
+
+        .toggle-wrapper {
+            display: flex;
+            align-items: center;
+        }
+        
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            font-weight: 600;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+            margin-left: 8px;
+        }
+
+        .switch input { opacity: 0; width: 0; height: 0; }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 14px; width: 14px;
+            left: 3px; bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider { background-color: #e74c3c; }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        .hidden { display: none !important; }
+        
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+        
+        .detail-item {
+            min-width: 0; 
+        }
+
+        .detail-item label {
+            font-size: 0.75rem;
+            color: #7f8c8d;
+            margin-bottom: 2px;
+            display: block;
+            white-space: nowrap; 
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .detail-item input {
+            width: 100%; 
+            padding: 8px;
+            font-size: 0.9rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            outline: none;
+            background: #fff;
+            transition: border-color 0.3s;
+        }
+        
+        .detail-item input:focus {
+            border-color: #3498db;
+        }
+
+        .relic-group {
+            margin-bottom: 15px;
+        }
+        .relic-group-title {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 5px;
+            padding-left: 5px;
+            border-left: 3px solid #bdc3c7;
+        }
 
         .result-box {
             background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
@@ -130,18 +267,16 @@
         .result-value { font-size: 1.5rem; font-weight: bold; color: #f1c40f; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         
         .time-result { font-size: 1.8rem; color: #f1c40f; font-weight: bold; display: block; margin-top: 10px; }
-        
         .sub-result-label { font-size: 0.95rem; opacity: 0.8; display: block; margin-bottom: 5px;}
         .sub-result-value { font-size: 1.2rem; color: #ecf0f1; font-weight: 600; }
-
         .note { font-size: 0.85rem; color: #7f8c8d; text-align: center; margin-top: 15px; }
 
         footer { background: #2c3e50; color: #bdc3c7; text-align: center; padding: 20px 0; font-size: 0.9rem; margin-top: auto; }
 
         @media (max-width: 600px) {
             .row-group { flex-direction: column; gap: 20px; }
-            .card-body { padding: 20px; }
-            .result-item { flex-direction: column; gap: 5px; }
+            .grid-4, .grid-5 { grid-template-columns: repeat(2, 1fr); }
+            .category-title { font-size: 1rem; }
         }
     </style>
 </head>
@@ -167,38 +302,171 @@
                         <p>輸入角色數據，預測原初之星評分</p>
                     </div>
                     <div class="card-body">
+                        
                         <div class="form-group">
-                            <label>角色等級 (Lv)</label>
+                            <label for="charLevel">角色等級 (Lv)</label>
                             <input type="number" id="charLevel" placeholder="100-120">
                         </div>
-                        <div class="form-group row-group">
-                            <div class="form-group">
-                                <label>當前經驗</label>
-                                <input type="number" id="currentExp" placeholder="0">
+
+                        <div class="form-group">
+                            <label>當前經驗</label>
+                            <input type="number" id="currentExp" placeholder="0">
+                            <p class="note" style="text-align: left; margin-top: 5px; font-size: 0.8rem;">
+                                * 經驗上限將自動帶入；支援智慧輸入 (如 12.6 = 126,000)
+                            </p>
+                        </div>
+
+                        <hr style="border: 0; border-top: 1px solid #eee; margin: 25px 0;">
+
+                        <div class="category-section" id="section-skill">
+                            <div class="category-header">
+                                <div class="category-title">技能等級</div>
+                                <div class="toggle-wrapper">
+                                    <label class="toggle-label">
+                                        詳細輸入
+                                        <label class="switch">
+                                            <input type="checkbox" id="toggle-skill" onchange="toggleSection('skill')">
+                                            <span class="slider"></span>
+                                        </label>
+                                    </label>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label>經驗上限</label>
-                                <input type="number" id="maxExp" placeholder="0">
+                            <div class="simple-view">
+                                <input type="number" id="avgSkill" class="calc-input" placeholder="輸入平均等級">
+                            </div>
+                            <div class="detail-view hidden">
+                                <div class="relic-group-title">主動技能</div>
+                                <div class="grid-4" style="margin-bottom: 10px;">
+                                    <div class="detail-item"><input type="number" class="detail-input skill-detail" placeholder="主動1"></div>
+                                    <div class="detail-item"><input type="number" class="detail-input skill-detail" placeholder="主動2"></div>
+                                    <div class="detail-item"><input type="number" class="detail-input skill-detail" placeholder="主動3"></div>
+                                    <div class="detail-item"><input type="number" class="detail-input skill-detail" placeholder="主動4"></div>
+                                </div>
+                                <div class="relic-group-title">被動技能</div>
+                                <div class="grid-4">
+                                    <div class="detail-item"><input type="number" class="detail-input skill-detail" placeholder="被動1"></div>
+                                    <div class="detail-item"><input type="number" class="detail-input skill-detail" placeholder="被動2"></div>
+                                    <div class="detail-item"><input type="number" class="detail-input skill-detail" placeholder="被動3"></div>
+                                    <div class="detail-item"><input type="number" class="detail-input skill-detail" placeholder="被動4"></div>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group row-group">
-                            <div class="form-group">
-                                <label>技能均等</label>
-                                <input type="number" id="avgSkill">
+
+                        <div class="category-section" id="section-equip">
+                            <div class="category-header">
+                                <div class="category-title">裝備等級</div>
+                                <div class="toggle-wrapper">
+                                    <label class="toggle-label">
+                                        詳細輸入
+                                        <label class="switch">
+                                            <input type="checkbox" id="toggle-equip" onchange="toggleSection('equip')">
+                                            <span class="slider"></span>
+                                        </label>
+                                    </label>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label>裝備均等</label>
-                                <input type="number" id="avgEquip">
+                            <div class="simple-view">
+                                <input type="number" id="avgEquip" class="calc-input" placeholder="輸入平均等級">
+                            </div>
+                            <div class="detail-view hidden">
+                                <div class="grid-5">
+                                    <div class="detail-item"><label>武器</label><input type="number" class="detail-input equip-detail"></div>
+                                    <div class="detail-item"><label>副武</label><input type="number" class="detail-input equip-detail"></div>
+                                    <div class="detail-item"><label>帽子</label><input type="number" class="detail-input equip-detail"></div>
+                                    <div class="detail-item"><label>衣服</label><input type="number" class="detail-input equip-detail"></div>
+                                    <div class="detail-item"><label>鞋子</label><input type="number" class="detail-input equip-detail"></div>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group row-group">
-                            <div class="form-group">
-                                <label>幻獸均等</label>
-                                <input type="number" id="avgPal">
+
+                        <div class="category-section" id="section-pal">
+                            <div class="category-header">
+                                <div class="category-title">幻獸等級</div>
+                                <div class="toggle-wrapper">
+                                    <label class="toggle-label">
+                                        詳細輸入
+                                        <label class="switch">
+                                            <input type="checkbox" id="toggle-pal" onchange="toggleSection('pal')">
+                                            <span class="slider"></span>
+                                        </label>
+                                    </label>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label>遺物均等</label>
-                                <input type="number" id="avgRelic">
+                            <div class="simple-view">
+                                <input type="number" id="avgPal" class="calc-input" placeholder="輸入平均等級">
+                            </div>
+                            <div class="detail-view hidden">
+                                <div class="grid-4">
+                                    <div class="detail-item"><label>出戰</label><input type="number" class="detail-input pal-detail"></div>
+                                    <div class="detail-item"><label>輔助1</label><input type="number" class="detail-input pal-detail"></div>
+                                    <div class="detail-item"><label>輔助2</label><input type="number" class="detail-input pal-detail"></div>
+                                    <div class="detail-item"><label>輔助3</label><input type="number" class="detail-input pal-detail"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="category-section" id="section-relic">
+                            <div class="category-header">
+                                <div class="category-title">遺物等級</div>
+                                <div class="toggle-wrapper">
+                                    <label class="toggle-label">
+                                        詳細輸入
+                                        <label class="switch">
+                                            <input type="checkbox" id="toggle-relic" onchange="toggleSection('relic')">
+                                            <span class="slider"></span>
+                                        </label>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="simple-view">
+                                <input type="number" id="avgRelic" class="calc-input" placeholder="輸入平均等級">
+                            </div>
+                            <div class="detail-view hidden">
+                                <div class="relic-group">
+                                    <div class="relic-group-title">光遺物</div>
+                                    <div class="grid-4">
+                                        <div class="detail-item"><input type="number" class="detail-input relic-detail" placeholder="1"></div>
+                                        <div class="detail-item"><input type="number" class="detail-input relic-detail" placeholder="2"></div>
+                                        <div class="detail-item"><input type="number" class="detail-input relic-detail" placeholder="3"></div>
+                                        <div class="detail-item"><input type="number" class="detail-input relic-detail" placeholder="4"></div>
+                                    </div>
+                                </div>
+                                <div class="relic-group">
+                                    <div class="relic-group-title">暗遺物</div>
+                                    <div class="grid-4">
+                                        <div class="detail-item"><input type="number" class="detail-input relic-detail" placeholder="1"></div>
+                                        <div class="detail-item"><input type="number" class="detail-input relic-detail" placeholder="2"></div>
+                                        <div class="detail-item"><input type="number" class="detail-input relic-detail" placeholder="3"></div>
+                                        <div class="detail-item"><input type="number" class="detail-input relic-detail" placeholder="4"></div>
+                                    </div>
+                                </div>
+                                <div class="relic-group">
+                                    <div class="relic-group-title">風遺物</div>
+                                    <div class="grid-4">
+                                        <div class="detail-item"><input type="number" class="detail-input relic-detail" placeholder="1"></div>
+                                        <div class="detail-item"><input type="number" class="detail-input relic-detail" placeholder="2"></div>
+                                        <div class="detail-item"><input type="number" class="detail-input relic-detail" placeholder="3"></div>
+                                        <div class="detail-item"><input type="number" class="detail-input relic-detail" placeholder="4"></div>
+                                    </div>
+                                </div>
+                                <div class="relic-group">
+                                    <div class="relic-group-title">水遺物</div>
+                                    <div class="grid-4">
+                                        <div class="detail-item"><input type="number" class="detail-input relic-detail" placeholder="1"></div>
+                                        <div class="detail-item"><input type="number" class="detail-input relic-detail" placeholder="2"></div>
+                                        <div class="detail-item"><input type="number" class="detail-input relic-detail" placeholder="3"></div>
+                                        <div class="detail-item"><input type="number" class="detail-input relic-detail" placeholder="4"></div>
+                                    </div>
+                                </div>
+                                <div class="relic-group">
+                                    <div class="relic-group-title">火遺物</div>
+                                    <div class="grid-4">
+                                        <div class="detail-item"><input type="number" class="detail-input relic-detail" placeholder="1"></div>
+                                        <div class="detail-item"><input type="number" class="detail-input relic-detail" placeholder="2"></div>
+                                        <div class="detail-item"><input type="number" class="detail-input relic-detail" placeholder="3"></div>
+                                        <div class="detail-item"><input type="number" class="detail-input relic-detail" placeholder="4"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -237,6 +505,9 @@
                         <div class="form-group">
                             <label>現在已累積經驗</label>
                             <input type="number" id="exp-currentExp" placeholder="0">
+                            <p class="note" style="text-align: left; margin-top: 5px; font-size: 0.8rem;">
+                                * 支援智慧輸入 (如 12.6 = 126,000)
+                            </p>
                         </div>
 
                         <div class="form-group">
@@ -285,10 +556,50 @@
             event.target.classList.add('active');
         }
 
-        const starInputs = ['charLevel', 'currentExp', 'maxExp', 'avgSkill', 'avgEquip', 'avgPal', 'avgRelic'];
-        starInputs.forEach(id => {
+        function toggleSection(sectionName) {
+            const toggle = document.getElementById(`toggle-${sectionName}`);
+            const section = document.getElementById(`section-${sectionName}`);
+            const simpleView = section.querySelector('.simple-view');
+            const detailView = section.querySelector('.detail-view');
+
+            if (toggle.checked) {
+                simpleView.classList.add('hidden');
+                detailView.classList.remove('hidden');
+            } else {
+                simpleView.classList.remove('hidden');
+                detailView.classList.add('hidden');
+            }
+            calculateStar();
+        }
+
+        const expTable = {
+            100: 886086, 101: 888547, 102: 926501, 103: 964086, 104: 1012164,
+            105: 1054111, 106: 1096529, 107: 1135645, 108: 1174997, 109: 1214584,
+            110: 1258533, 111: 1303677, 112: 1348574, 113: 1393941, 114: 1439780,
+            115: 1486091, 116: 1532872, 117: 1580125, 118: 1627849, 119: 1676044,
+            120: 1730017, 121: 1783360, MAX_VAL: 1833196 
+        };
+
+        function getExpForLevel(lvl) {
+            if (lvl < 100) return 0;
+            if (lvl >= 122) return expTable.MAX_VAL;
+            return expTable[lvl] || expTable.MAX_VAL;
+        }
+
+        function getSmartExpValue(id) {
             const el = document.getElementById(id);
-            if(el) el.addEventListener('input', calculateStar);
+            if (!el || el.value === "") return 0;
+            let val = Number(el.value);
+            
+            if (val > 0 && val < 300) { 
+                return Math.round(val * 10000); 
+            }
+            return val;
+        }
+
+        const allStarInputs = document.querySelectorAll('#tab-star input');
+        allStarInputs.forEach(input => {
+            input.addEventListener('input', calculateStar);
         });
 
         function calculateStar() {
@@ -298,58 +609,63 @@
             };
 
             const charLevel = getVal('charLevel');
-            const currentExp = Number(document.getElementById('currentExp').value) || 0;
-            const maxExp = Number(document.getElementById('maxExp').value) || 0;
-            const avgSkill = getVal('avgSkill');
-            const avgEquip = getVal('avgEquip');
-            const avgPal = getVal('avgPal');
-            const avgRelic = getVal('avgRelic');
+            let scoreLevel = (charLevel === null) ? 0 : Math.max(0, (charLevel - 100)) * 100;
+            
+            const currentExp = getSmartExpValue('currentExp'); 
+            
+            let autoMaxExp = 0;
+            if (charLevel !== null) {
+                autoMaxExp = getExpForLevel(charLevel);
+            }
+            let scoreExp = (autoMaxExp > 0) ? Math.round((currentExp / autoMaxExp) * 100) : 0;
+            
+            const calcDetailedSum = (selector, base, weight) => {
+                let sum = 0;
+                document.querySelectorAll(selector).forEach(el => {
+                    let val = el.value === "" ? 0 : Number(el.value);
+                    sum += Math.max(0, (val - base)) * weight;
+                });
+                return sum;
+            };
 
-            let scoreLevel = (charLevel === null) ? 0 : (charLevel - 100) * 100;
-            let scoreExp = (maxExp !== 0) ? Math.round((currentExp / maxExp) * 100) : 0;
-            let scoreSkill = (avgSkill === null) ? 0 : (avgSkill - 100) * 104;
-            let scoreEquip = (avgEquip === null) ? 0 : (avgEquip - 100) * 190;
-            let scorePal = (avgPal === null) ? 0 : (avgPal - 100) * 56;
-            let scoreRelic = (avgRelic === null) ? 0 : (avgRelic - 10) * 1140;
+            const calcSimpleScore = (id, base, weightPerSlot, slotCount) => {
+                const val = getVal(id);
+                return (val === null) ? 0 : Math.max(0, (val - base)) * weightPerSlot * slotCount;
+            };
+
+            let scoreSkill = 0;
+            if (document.getElementById('toggle-skill').checked) {
+                scoreSkill = calcDetailedSum('.skill-detail', 100, 13);
+            } else {
+                scoreSkill = calcSimpleScore('avgSkill', 100, 13, 8);
+            }
+
+            let scoreEquip = 0;
+            if (document.getElementById('toggle-equip').checked) {
+                scoreEquip = calcDetailedSum('.equip-detail', 100, 38);
+            } else {
+                scoreEquip = calcSimpleScore('avgEquip', 100, 38, 5);
+            }
+
+            let scorePal = 0;
+            if (document.getElementById('toggle-pal').checked) {
+                scorePal = calcDetailedSum('.pal-detail', 100, 14);
+            } else {
+                scorePal = calcSimpleScore('avgPal', 100, 14, 4);
+            }
+
+            let scoreRelic = 0;
+            if (document.getElementById('toggle-relic').checked) {
+                scoreRelic = calcDetailedSum('.relic-detail', 10, 57);
+            } else {
+                scoreRelic = calcSimpleScore('avgRelic', 10, 57, 20);
+            }
 
             const total = scoreLevel + scoreExp + scoreSkill + scoreEquip + scorePal + scoreRelic;
             const stars = 10 + (total / 100);
 
             document.getElementById('star-totalScore').textContent = new Intl.NumberFormat().format(total);
             document.getElementById('star-final').textContent = stars.toFixed(2);
-        }
-        
-        // 經驗表數據 (Level 100 - 124+)
-        const expTable = {
-            100: 886086,
-            101: 888547,
-            102: 926501,
-            103: 964086,
-            104: 1012164,
-            105: 1054111,
-            106: 1096529,
-            107: 1135645,
-            108: 1174997,
-            109: 1214584,
-            110: 1258533,
-            111: 1303677,
-            112: 1348574,
-            113: 1393941,
-            114: 1439780,
-            115: 1486091,
-            116: 1532872,
-            117: 1580125,
-            118: 1627849,
-            119: 1676044,
-            120: 1730017,
-            121: 1783360,
-            MAX_VAL: 1833196 
-        };
-
-        function getExpForLevel(lvl) {
-            if (lvl < 100) return 0; 
-            if (lvl >= 122) return expTable.MAX_VAL;
-            return expTable[lvl] || expTable.MAX_VAL;
         }
 
         const expInputs = ['exp-currentLv', 'exp-targetLv', 'exp-currentExp', 'exp-perHour', 'exp-freeSpeedup', 'exp-stoneSpeedup'];
@@ -360,11 +676,9 @@
         
         function formatTime(totalHours) {
             if (totalHours <= 0) return "0分";
-            
             const days = Math.floor(totalHours / 24);
             const remainingHours = Math.floor(totalHours % 24);
             const minutes = Math.round((totalHours * 60) % 60);
-
             let timeString = "";
             if (days > 0) timeString += `${days}天 `;
             if (remainingHours > 0 || days > 0) timeString += `${remainingHours}小時 `;
@@ -375,12 +689,13 @@
         function calculateTime() {
             const currentLv = Number(document.getElementById('exp-currentLv').value);
             const targetLv = Number(document.getElementById('exp-targetLv').value);
-            const currentExp = Number(document.getElementById('exp-currentExp').value) || 0;
+            
+            const currentExp = getSmartExpValue('exp-currentExp');
+            
             const expPerHour = Number(document.getElementById('exp-perHour').value) || 0;
             const freeSpeedup = Number(document.getElementById('exp-freeSpeedup').value) || 0;
             const stoneSpeedup = Number(document.getElementById('exp-stoneSpeedup').value) || 0;
 
-            // 基本防呆
             if (!currentLv || !targetLv || currentLv >= targetLv) {
                 document.getElementById('exp-timeResult').textContent = "請輸入正確等級範圍";
                 document.getElementById('exp-timeResult-original').textContent = "--";
@@ -391,7 +706,6 @@
             for (let lv = currentLv; lv < targetLv; lv++) {
                 totalNeeded += getExpForLevel(lv);
             }
-
             let baseRemainingNeeded = totalNeeded - currentExp;
 
             if (baseRemainingNeeded <= 0) {
@@ -409,10 +723,8 @@
             const baseHoursNeeded = baseRemainingNeeded / expPerHour;
             document.getElementById('exp-timeResult-original').textContent = formatTime(baseHoursNeeded);
 
-
             const speedupHours = (freeSpeedup + stoneSpeedup) * 2;
             const speedupExp = speedupHours * expPerHour;
-            
             let actualRemainingNeeded = baseRemainingNeeded - speedupExp;
 
             if (actualRemainingNeeded <= 0) {

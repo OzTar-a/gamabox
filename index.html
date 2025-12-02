@@ -74,6 +74,7 @@
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* --- 卡片通用樣式 --- */
         .tool-card {
             background: #fff;
             border-radius: 12px;
@@ -97,6 +98,24 @@
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50; font-size: 0.95rem; }
         
+        .season-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: #fcfcfc;
+            color: #2c3e50;
+            font-weight: bold;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+        .season-select:hover {
+            background-color: #f0f8ff;
+        }
+
         .form-group input,
         .simple-view input {
             width: 100%; 
@@ -218,6 +237,7 @@
             text-overflow: ellipsis;
         }
 
+        /* 詳細模式小格子樣式 */
         .detail-item input {
             width: 100%; 
             padding: 8px;
@@ -303,9 +323,15 @@
                     </div>
                     <div class="card-body">
                         
+                        <select id="seasonSelect" class="season-select" onchange="handleSeasonChange()">
+                            <option value="S1">S1. 逢魔時刻</option>
+                            <option value="S2">S2. 淵虹邂羽</option>
+                            <option value="S3">S3. 渾沌終焉</option>
+                        </select>
+
                         <div class="form-group">
                             <label for="charLevel">角色等級 (Lv)</label>
-                            <input type="number" id="charLevel" placeholder="100-120">
+                            <input type="number" id="charLevel" placeholder="100-260">
                         </div>
 
                         <div class="form-group">
@@ -491,6 +517,7 @@
                         <p>計算掛機所需時間，包含加速道具折抵</p>
                     </div>
                     <div class="card-body">
+                        <!-- 基礎輸入 -->
                         <div class="form-group row-group">
                             <div class="form-group">
                                 <label>現在等級</label>
@@ -571,54 +598,149 @@
             }
             calculateStar();
         }
-
-        const expTable = {
+        const expTableS1 = {
             100: 886086, 101: 888547, 102: 926501, 103: 964086, 104: 1012164,
             105: 1054111, 106: 1096529, 107: 1135645, 108: 1174997, 109: 1214584,
             110: 1258533, 111: 1303677, 112: 1348574, 113: 1393941, 114: 1439780,
             115: 1486091, 116: 1532872, 117: 1580125, 118: 1627849, 119: 1676044,
-            120: 1730017, 121: 1783360, MAX_VAL: 1833196 
+            120: 1730017, 121: 1783360, 122: 1833196, 123: 1833196, 124: 1833196,
+            125: 1833196, 126: 1833196, 127: 1833196, 128: 1833196, MAX_VAL: 1833196 
+        };
+
+        const expTableS2 = {
+            100: 886000, 101: 3027527, 102: 3032011, 103: 3117883, 104: 3191855,
+            105: 3220513, 106: 3258763, 107: 3346658, 108: 3389858, 109: 3548753,
+            110: 3631694, 111: 3771824, 112: 3796167, 113: 3866624, 114: 3924404,
+            115: 4029348, 116: 4101565, 117: 4245434, 118: 4245686, 119: 4514881,
+            120: 4566377, 121: 4752888, 122: 4860000, 123: 5012377, 124: 5016341,
+            125: 5178619, 126: 5229563, 127: 5423881, 128: 5459728, 129: 6335318,
+            130: 6342809, 131: 6791971, 132: 7349165, 133: 7896724, 134: 8431041,
+            135: 8948504, 136: 9536985, 137: 10062872, 138: 10591166, 139: 11201308,
+            140: 11280750, 141: 11334730, 142: 11387696, 143: 11440662, 144: 11493628,
+            145: 11546594, 146: 11599560, 147: 11652526, 148: 11679009, 149: 11731975,
+            150: 11784941, 151: 11811613, 152: 11838097, 153: 11864580, 154: 11917547,
+            155: 11970514, 156: 12049964, 157: 12155898, 158: 12208865, 159: 12261832,
+            160: 12314799, 161: 12394079, 162: 12447046, 163: 12500012, 164: 12500012,
+            165: 12526495, 166: 12579461, 167: 12632427, 168: 12658910, 169: 12711876,
+            170: 12764842, 171: 12817637, 172: 12870602, 173: 12950050, 174: 13029499,
+            175: 13082464, 176: 13135429, 177: 13188395, 178: 13214878, 179: 13267843,
+            180: 13320809, 181: 13372809, 182: 13399290, 183: 13425771, 184: 13452251,
+            185: 13478732, 186: 13478732, 187: 13478732, 188: 13478732, MAX_VAL: 13478732
+        };
+        const expTableS3 = {
+            100: 886000, 101: 3027527, 102: 3032011, 103: 3117883, 104: 3191855,
+            105: 3220513, 106: 3258763, 107: 3346658, 108: 3389858, 109: 3548753,
+            110: 3631694, 111: 3771824, 112: 3796167, 113: 3866624, 114: 3924404,
+            115: 4029348, 116: 4101565, 117: 4245434, 118: 4245686, 119: 4514881,
+            120: 4566377, 121: 4752888, 122: 4860000, 123: 5012377, 124: 5016341,
+            125: 5178619, 126: 5229563, 127: 5423881, 128: 5459728, 129: 6335318,
+            
+            // Lv 130 起變動 (S3 新數據)
+            130: 22859655, 131: 23541185, 132: 23587156, 133: 24290510, 134: 24337860,
+            135: 25112507, 136: 25161277, 137: 25962089, 138: 26062556, 139: 26920314,
+            140: 27780149, 141: 28608441, 142: 28773140, 143: 29687769, 144: 29800863,
+            145: 30864506, 146: 30980992, 147: 32025290, 148: 32205262, 149: 33270698,
+            150: 34387276, 151: 35609150, 152: 35871344, 153: 37143639, 154: 37211154,
+            155: 38460179, 156: 38529719, 157: 39822474, 158: 40037353, 159: 43248083,
+            160: 44969859, 161: 48762878, 162: 52604320, 163: 56396556, 164: 60225668,
+            165: 63980989, 166: 67994521, 167: 71934262, 168: 76039985, 169: 80194876,
+            170: 80600630, 171: 81009637, 172: 81415408, 173: 81685922, 174: 81821179,
+            175: 82226950, 176: 82632720, 177: 82903234, 178: 83309005, 179: 83714776,
+            180: 83985290, 181: 84388130, 182: 84658635, 183: 84929139, 184: 85334896,
+            185: 85605400, 186: 85875905, 187: 86281661, 188: 86552166, 189: 86822670,
+            190: 86957923, 191: 87237117, 192: 87507648, 193: 87913445, 194: 103526684,
+            195: 114131779, 196: 114434891, 197: 114586448, 198: 114889559, 199: 115192672,
+            200: 115344229, 201: 115928916, 202: 116231965, 203: 116686535, 204: 116838059,
+            205: 117444154, 206: 117747201, 207: 117898726, 208: 118353296, 209: 118656343,
+            210: 118807868, 211: 119120332, 212: 119271871, 213: 119726482, 214: 120029557,
+            215: 120181095, 216: 120484169, 217: 120787245, 218: 121090319, 219: 105899150,
+            220: 106656837, 221: 106969019, 222: 107120569, 223: 107423670, 224: 107726771,
+            225: 108332972, 226: 108484523, 227: 109242275, 228: 109545375, 229: 109696926,
+            230: 110000026, 231: 110293284, 232: 110444820, 233: 110747894, 234: 111050968,
+            235: 111657115, 236: 111808652, 237: 111960189, 238: 112263263, 239: 112414799,
+            240: 112717873, 241: 113019510, 242: 113322580, 243: 113625650, 244: 113777185,
+            245: 114080255, 246: 114080255, 247: 114231790, 248: 114231790, 249: 114383325,
+            250: 114498509, 251: 114534860, 252: 114649996, 253: 114649996, 254: 114649996,
+            255: 114649996, 256: 114649996, 257: 114649996, MAX_VAL: 114649996
         };
 
         function getExpForLevel(lvl) {
+            const seasonKey = document.getElementById('seasonSelect').value;
+            
+            let table = expTableS1; 
+            if (seasonKey === 'S2') table = expTableS2;
+            if (seasonKey === 'S3') table = expTableS3;
+            
             if (lvl < 100) return 0;
-            if (lvl >= 122) return expTable.MAX_VAL;
-            return expTable[lvl] || expTable.MAX_VAL;
+            
+            const maxLvl = Math.max(...Object.keys(table).map(Number));
+            if (lvl >= maxLvl) return table.MAX_VAL;
+            
+            return table[lvl] || table.MAX_VAL;
         }
-
         function getSmartExpValue(id) {
             const el = document.getElementById(id);
             if (!el || el.value === "") return 0;
             let val = Number(el.value);
-            
             if (val > 0 && val < 300) { 
                 return Math.round(val * 10000); 
             }
             return val;
         }
 
+        const seasonConfig = {
+            'S1': {
+                baseLevel: 100,
+                relicBaseLevel: 10,
+                weights: { skill: 13, equip: 38, pal: 14, relic: 57 },
+                starBase: 10,
+                starDivisor: 100
+            },
+            'S2': {
+                baseLevel: 130,
+                relicBaseLevel: 13,
+                weights: { skill: 7, equip: 18, pal: 8, relic: 33 },
+                starBase: 45,
+                starDivisor: 27
+            },
+            'S3': {
+                baseLevel: 160,
+                relicBaseLevel: 16,
+                weights: { skill: 5, equip: 14, pal: 6, relic: 26 },
+                starBase: 65,
+                starDivisor: 13
+            }
+        };
+
         const allStarInputs = document.querySelectorAll('#tab-star input');
         allStarInputs.forEach(input => {
             input.addEventListener('input', calculateStar);
         });
 
+        function handleSeasonChange() {
+            calculateStar();
+            calculateTime();
+        }
+
         function calculateStar() {
+            const seasonKey = document.getElementById('seasonSelect').value;
+            const config = seasonConfig[seasonKey];
+
             const getVal = (id) => {
                 const el = document.getElementById(id);
                 return el.value === "" ? null : Number(el.value);
             };
 
             const charLevel = getVal('charLevel');
-            let scoreLevel = (charLevel === null) ? 0 : Math.max(0, (charLevel - 100)) * 100;
+            let scoreLevel = (charLevel === null) ? 0 : Math.max(0, (charLevel - config.baseLevel)) * 100;
             
             const currentExp = getSmartExpValue('currentExp'); 
-            
             let autoMaxExp = 0;
             if (charLevel !== null) {
                 autoMaxExp = getExpForLevel(charLevel);
             }
             let scoreExp = (autoMaxExp > 0) ? Math.round((currentExp / autoMaxExp) * 100) : 0;
-            
+
             const calcDetailedSum = (selector, base, weight) => {
                 let sum = 0;
                 document.querySelectorAll(selector).forEach(el => {
@@ -635,34 +757,35 @@
 
             let scoreSkill = 0;
             if (document.getElementById('toggle-skill').checked) {
-                scoreSkill = calcDetailedSum('.skill-detail', 100, 13);
+                scoreSkill = calcDetailedSum('.skill-detail', config.baseLevel, config.weights.skill);
             } else {
-                scoreSkill = calcSimpleScore('avgSkill', 100, 13, 8);
+                scoreSkill = calcSimpleScore('avgSkill', config.baseLevel, config.weights.skill, 8);
             }
 
             let scoreEquip = 0;
             if (document.getElementById('toggle-equip').checked) {
-                scoreEquip = calcDetailedSum('.equip-detail', 100, 38);
+                scoreEquip = calcDetailedSum('.equip-detail', config.baseLevel, config.weights.equip);
             } else {
-                scoreEquip = calcSimpleScore('avgEquip', 100, 38, 5);
+                scoreEquip = calcSimpleScore('avgEquip', config.baseLevel, config.weights.equip, 5);
             }
 
             let scorePal = 0;
             if (document.getElementById('toggle-pal').checked) {
-                scorePal = calcDetailedSum('.pal-detail', 100, 14);
+                scorePal = calcDetailedSum('.pal-detail', config.baseLevel, config.weights.pal);
             } else {
-                scorePal = calcSimpleScore('avgPal', 100, 14, 4);
+                scorePal = calcSimpleScore('avgPal', config.baseLevel, config.weights.pal, 4);
             }
 
             let scoreRelic = 0;
             if (document.getElementById('toggle-relic').checked) {
-                scoreRelic = calcDetailedSum('.relic-detail', 10, 57);
+                scoreRelic = calcDetailedSum('.relic-detail', config.relicBaseLevel, config.weights.relic);
             } else {
-                scoreRelic = calcSimpleScore('avgRelic', 10, 57, 20);
+                scoreRelic = calcSimpleScore('avgRelic', config.relicBaseLevel, config.weights.relic, 20);
             }
 
             const total = scoreLevel + scoreExp + scoreSkill + scoreEquip + scorePal + scoreRelic;
-            const stars = 10 + (total / 100);
+            // 星星計算：Base + (Total / Divisor)
+            const stars = config.starBase + (total / config.starDivisor);
 
             document.getElementById('star-totalScore').textContent = new Intl.NumberFormat().format(total);
             document.getElementById('star-final').textContent = stars.toFixed(2);
@@ -689,9 +812,7 @@
         function calculateTime() {
             const currentLv = Number(document.getElementById('exp-currentLv').value);
             const targetLv = Number(document.getElementById('exp-targetLv').value);
-            
             const currentExp = getSmartExpValue('exp-currentExp');
-            
             const expPerHour = Number(document.getElementById('exp-perHour').value) || 0;
             const freeSpeedup = Number(document.getElementById('exp-freeSpeedup').value) || 0;
             const stoneSpeedup = Number(document.getElementById('exp-stoneSpeedup').value) || 0;
@@ -704,7 +825,7 @@
 
             let totalNeeded = 0;
             for (let lv = currentLv; lv < targetLv; lv++) {
-                totalNeeded += getExpForLevel(lv);
+                totalNeeded += getExpForLevel(lv); 
             }
             let baseRemainingNeeded = totalNeeded - currentExp;
 
